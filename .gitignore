@@ -1,4 +1,8 @@
 *.so
 en-cw.*
-
+*venv
+__MACOSX
+__pycache__
+data
+zh_en_data
 
