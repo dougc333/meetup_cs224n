@@ -72,7 +72,12 @@ class ParserModel(nn.Module):
         ###     Dropout: https://pytorch.org/docs/stable/nn.html#dropout-layers
         ### 
         ### See the PDF for hints.
-
+        # the paper uses num labels =l and num tags=t
+        #paper uses input layer = w+t+l w = #words
+        self.embed_to_hidden_weight = nn.Parameter(???,self.hidden_size)
+        self.embed_to_hidden_bias = nn.Parameter(self.hidden_size)
+        self.nn.init.xavier_uniform_(self.embed_to_hidden_weight)
+        self.nn.init.uniform_(self.embed_to_hidden_bias)
 
 
 

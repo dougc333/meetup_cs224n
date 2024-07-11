@@ -18,7 +18,7 @@ class PartialParse(object):
         """
         # The sentence being parsed is kept for bookkeeping purposes. Do NOT alter it in your code.
         self.sentence = sentence
-
+        print("sentence:",sentence)
         ### YOUR CODE HERE (3 Lines)
         ### Your code should initialize the following fields:
         ###     self.stack: The current stack represented as a list with the top of the stack as the
@@ -32,8 +32,10 @@ class PartialParse(object):
         ### Note: The root token should be represented with the string "ROOT"
         ### Note: If you need to use the sentence object to initialize anything, make sure to not directly 
         ###       reference the sentence object.  That is, remember to NOT modify the sentence object. 
-
-
+        self.root = "ROOT"
+        self.stack = [self.root]
+        self.buffer = self.sentence.copy()
+        self.dependencies = []
         ### END YOUR CODE
 
 
@@ -51,6 +53,41 @@ class PartialParse(object):
         ###         1. Shift
         ###         2. Left Arc
         ###         3. Right Arc
+        print("parse_step transition",transition)
+        print("parse_step self.buffer:",self.buffer)
+        print("parse_step self.dependencies:",self.dependencies)
+        print("parse_step self.stack:",self.stack)
+        
+        if transition == "S":
+          """
+          shift remove buf[0] to stack
+          """
+          print("SHIFT:",self.buffer)
+          self.stack.append(self.buffer[0])
+          self.buffer.remove(self.buffer[0])
+        elif transition == "LA":
+          """
+          left arc remove the second word from end in stack and add 
+          the last 2 words from the stack        
+          """
+          print("LA word to remove:",self.stack[len(self.stack)-2])
+          print("len stack:",len(self.stack))
+          self.dependencies.append(tuple(reversed(self.stack[ (len(self.stack)-2):len(self.stack)])))
+          print("after LA slice self.dependencies type:",type(self.dependencies))
+          self.stack.remove(self.stack[len(self.stack)-2])
+          
+        elif transition == "RA":
+          """
+          right arc, remove last word from stack, add tuple from last 2 words in stack to self.dependencies
+          """
+          print("right arc remove:",self.stack[len(self.stack)-1])
+          t = tuple(self.stack[len(self.stack)-2:len(self.stack)])
+          print("right arc tuple:",t)
+          self.dependencies.append(t)
+          self.stack.remove(self.stack[len(self.stack)-1])
+         
+        else:
+          print("invalid transition")
 
 
         ### END YOUR CODE
@@ -114,7 +151,14 @@ def test_step(name, transition, stack, buf, deps,
     """Tests that a single parse step returns the expected output"""
     pp = PartialParse([])
     pp.stack, pp.buffer, pp.dependencies = stack, buf, deps
-
+    print("test_step name:",name)
+    print("test_step transition:",transition)
+    print("test_step stack:",stack)
+    print("test_step buf:",buf)
+    print("test_step ex_stack:",ex_stack)
+    print("test_step ex_buf:",ex_buf)
+    print("test_step ex_deps:",ex_deps, type(ex_deps))
+    
     pp.parse_step(transition)
     stack, buf, deps = (tuple(pp.stack), tuple(pp.buffer), tuple(sorted(pp.dependencies)))
     assert stack == ex_stack, \
