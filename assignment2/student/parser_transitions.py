@@ -18,7 +18,7 @@ class PartialParse(object):
         """
         # The sentence being parsed is kept for bookkeeping purposes. Do NOT alter it in your code.
         self.sentence = sentence
-        print("sentence:",sentence)
+        #print("sentence:",sentence)
         ### YOUR CODE HERE (3 Lines)
         ### Your code should initialize the following fields:
         ###     self.stack: The current stack represented as a list with the top of the stack as the
@@ -140,7 +140,16 @@ def minibatch_parse(sentences, model, batch_size):
     ###             to remove objects from the `unfinished_parses` list. This will free the underlying memory that
     ###             is being accessed by `partial_parses` and may cause your code to crash.
 
-
+    partial_parses = [PartialParse(sentence) for sentence in sentences]
+    unfinished_parses = partial_parses[:]
+    while unfinished_parses:
+      mini_parses = unfinished_parses[:batch_size]
+      transitions = model.predict(mini_parses)
+      for partial_parse, transition in zip(mini_parses, transitions):
+        partial_parse.parse_step(transition)
+        if len(partial_parse.stack) == 1 and len(partial_parse.buffer) == 0:
+          unfinished_parses.remove(partial_parse)
+    dependencies = [partial_parse.dependencies for partial_parse in partial_parses]
     ### END YOUR CODE
 
     return dependencies

@@ -250,8 +250,10 @@ class Parser(object):
 
         UAS = all_tokens = 0.0
         with tqdm(total=len(dataset)) as prog:
+            print("dataset len:",len(dataset))
             for i, ex in enumerate(dataset):
                 head = [-1] * len(ex['word'])
+                print("i:",i, dependencies[i])
                 for h, t, in dependencies[i]:
                     head[t] = h
                 for pred_h, gold_h, gold_l, pos in \
