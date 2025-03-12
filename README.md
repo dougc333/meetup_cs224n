@@ -1,9 +1,7 @@
-# CS224n Working Group
+https://www.youtube.com/watch?v=SU88nx6PJoc
 
-Work through the Assignments, focus on programming projects
+add sglang to vector space model
 
-The assignments.zip from the website are moved to individual folders. This is
-to prevent collison with the student subdirectory which contains code for each
-assignment.
+Create animation for parallelism
 
 
